@@ -1,0 +1,4 @@
+node_modules
+invoices.sqlite
+public/boot.js
+public/boot.js.map
