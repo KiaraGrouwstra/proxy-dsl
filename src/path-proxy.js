@@ -1,7 +1,5 @@
 let _ = require('lodash/fp');
-// import { asyncProxy } from './async-proxy.js';
 let { asyncProxy } = require('./async-proxy.js');
-// import { INDEX, DETAIL } from './constants.js';
 let { INDEX, DETAIL } = require('./constants.js');
 
 let pathHandler = {};

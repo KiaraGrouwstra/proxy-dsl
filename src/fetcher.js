@@ -1,5 +1,4 @@
 let _ = require('lodash/fp');
-// import { INDEX, DETAIL } from './constants.js';
 let { INDEX, DETAIL } = require('./constants.js');
 
 // fetch an endpoint, return deserialized JSON results as Promise

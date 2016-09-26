@@ -1,7 +1,6 @@
-// import { pathProxy } from './path-proxy.js';
-let { pathProxy } = require('./path-proxy.js');
-// import { makeFetcher } from './fetcher.js';
-let { makeFetcher } = require('./fetcher.js');
+let assert = require('assert');
+let { pathProxy } = require('../src');
+let { makeFetcher } = require('../src/fetcher.js');
 let fetch = require('node-fetch');  //fetch ||
 
 // make our fetcher -- uses a function taking a URL and options object to return a Promise<Response>|Observable<Response>. can use e.g. Fetch API, ng2's `http.get()`.
@@ -40,6 +39,7 @@ let pathStruct = {
     },
   },
 };
+
 // meta-data per endpoint:
 //   fetchMeta: an overriding options object passed as second argument to the fetcher to say specify headers.
 //   pageType: explicitly indicate the endpoint as 'INDEX' or 'DETAIL' (default: `additionalProperties` -> DETAIL, otherwise INDEX); use-cases:
@@ -51,19 +51,32 @@ let pathStruct = {
 //   filter: keys
 
 const log = console.log.bind(console);
-// construct the API
-let api = pathProxy({ meta: pathStruct, fetcher, store });
-// console.log('api', api);
-api
-    // path proxy: construct and fetch endpoint `/pokemon/1` if not cached
-    // .pokemon[1]
-    .cool.Tycho
-    // .operations
-    // async proxy: map the asynchronously Promise'd result to a deep property
-    // .forms[0].name
-    // [0].name
-    .message
-    // exit Proxy by directly invoking the Promise/Observable
-    .then(log)
-    .catch(log)
-    // logs: bulbasaur
+
+describe('path proxy', () => {
+  it('allows navigating remote collections as if they were local', (done) => {
+    // construct the API
+    let api = pathProxy({ meta: pathStruct, fetcher, store });
+    // console.log('api', api);
+    api
+        // path proxy: construct and fetch endpoint `/pokemon/1` if not cached
+        // .pokemon[1]
+        .cool.Tycho
+        // .operations
+        // async proxy: map the asynchronously Promise'd result to a deep property
+        // .forms[0].name
+        // [0].name
+        .message
+        // exit Proxy by directly invoking the Promise/Observable
+        .then((v) => {
+          expect(v).toEqual('Cool story, bro.');
+          done();
+        })
+        .catch(e => {
+          throw e;
+          done();
+        })
+        // .then(log)
+        // .catch(log)
+        // logs: bulbasaur
+  });
+});
