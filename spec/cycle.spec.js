@@ -25,7 +25,7 @@ describe('retrocycle', () => {
   });
   it('o', () => {
     let res = retrocycle(decycle(o)).a.a;
-    expect(res).toNotEqual({ $ref: '/' });
+    expect(res).not.toEqual({ $ref: '/' });
   });
 });
 

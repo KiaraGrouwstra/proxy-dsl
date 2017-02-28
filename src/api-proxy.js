@@ -21,10 +21,13 @@ apiHandler.get = (target, prop) => {
     let childMeta = R.path(['properties', prop])(meta) || R.path(['additionalProperties'])(meta);
     if (childMeta) {
       // api path exists -- update info, stay in this apiProxy FSM state
-      let val = R.pipe([
+      console.log('target', target);
+      let val = R.pipe(
         R.assoc('meta', childMeta),
-        R.evolve({ path: R.concat(prop) }),
-      ])(target);
+        R.evolve({
+          path: p=>p.concat(prop),
+        })
+      )(target);
       return new Proxy(val, apiHandler);
     } else {
       // no deeper child endpoints. get cached/fetched.
