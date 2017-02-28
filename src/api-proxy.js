@@ -1,4 +1,4 @@
-let _ = require('lodash/fp');
+let R = require('ramda');
 let { asyncProxy } = require('./async-proxy.js');
 let { INDEX, DETAIL } = require('./constants.js');
 
