@@ -18,12 +18,12 @@ apiHandler.get = (target, prop) => {
       prop = Number(prop);
     }
     let { meta, path, fetcher, store } = target;
-    let childMeta = _.get(['properties', prop])(meta) || _.get(['additionalProperties'])(meta);
+    let childMeta = R.path(['properties', prop])(meta) || R.path(['additionalProperties'])(meta);
     if (childMeta) {
       // api path exists -- update info, stay in this apiProxy FSM state
-      let val = _.flow([
-        _.set(['meta'], childMeta),
-        _.update(['path'], y => y.concat(prop)),
+      let val = R.pipe([
+        R.assoc('meta', childMeta),
+        R.evolve({ path: R.concat(prop) }),
       ])(target);
       return new Proxy(val, apiHandler);
     } else {
@@ -31,7 +31,7 @@ apiHandler.get = (target, prop) => {
       let { fetchMeta, pageType, fullyRequested } = meta;
       pageType = pageType || (meta.properties && meta.properties[prop]) ? DETAIL : INDEX;
       // checked if cached (fully so for collection)
-      let cache = _.get([...path])(store);
+      let cache = R.path([...path])(store);
       let isCached = cache && (pageType == DETAIL || fullyRequested);
       if (isCached) {
         // use cached -- leave Proxy
@@ -53,6 +53,6 @@ apiHandler.get = (target, prop) => {
 //   store: {}; the cache to store items in and retrieve them from
 //   // path: string[]; leave unspecified; API path to start from after the baseUrl
 module.exports.apiProxy = (obj) => {
-  let target = _.set(['path'], [])(obj);
+  let target = R.assoc('path', [])(obj);
   return new Proxy(target, apiHandler);
 }
