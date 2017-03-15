@@ -6,7 +6,7 @@ module.exports.cloneFn = (fn) => {
     cloneObj = fn.__clonedFrom;
   }
   let tmp = function() {
-      cloneObj.apply(fn, arguments);
+      return cloneObj.apply(fn, arguments);
   };
   for (let key in fn) {
     tmp[key] = fn[key];

@@ -4,7 +4,7 @@ let { cloneFn } = require('./helpers.js');
 let pathHandler = {};
 
 pathHandler.apply = (target, that, args) => {
-  target.apply(that, [target.path, ...args]);
+  return target.apply(that, [target.path, ...args]);
 }
 
 pathHandler.get = (target, prop) => {
